@@ -14,7 +14,7 @@ screenshots of a running WordPress installation.
 
 | Component | Requirement | Verification in this workspace |
 | --- | --- | --- |
-| WordPress | 6.6 or newer; block editor enabled | Local files report 7.1.2; integration not yet tested |
+| WordPress | 6.6 or newer; block editor enabled | Local 7.1.2: active plugin, real REST query and draft frontend checked; full integration pending |
 | PHP | 7.4 or newer | Syntax and offline tests passed on 8.2.29 |
 | Browser | Current Chrome/Edge, Firefox or Safari with CSS container queries | Offline layout checked in installed Edge |
 | Node.js, development only | 22.22.2+ on the 22 LTS line, or 24.15.0+ on the 24 LTS line | Build/test/watch checked on 24.21.0, npm 11.19.0 |
@@ -169,12 +169,20 @@ Passed here: seven Node tests, 47 PHP assertions, PHP syntax checks, production
 build, watch smoke check, and 14 offline Edge layout assertions. See the full
 [acceptance results](docs/validation.md) for scope and commands.
 
-Not verified: installation/activation inside WordPress, actual editor REST
-integration, saving/reopening, database filtering and refresh after publication,
-theme interactions, keyboard/screen-reader behavior in WordPress, and the minimum
-version matrix. Npm installation failed with `EACCES`, so official JS/CSS lint and
-PHPCS have not passed or been claimed as passed. This sandbox also blocks local
-HTTP requests; a prior host request returned HTTP 502.
+The local site is now reachable. Authenticated WordPress REST checks confirmed
+the plugin is active, five demo articles have featured images, newest-first hero
+selection works, sponsor metadata is saved, and the actual draft frontend renders
+one hero and four cards. Demo category: **Gardening Demo**; example page ID: **25**.
+Those sample posts are published only on the local development site; the example
+page remains a draft.
+
+Not verified: installation from the ZIP, interactive editor behavior and
+saving/reopening, database privacy/category edge cases, refresh after another
+publication, theme/keyboard/screen-reader behavior, and the minimum version
+matrix. Npm installation failed with `EACCES`, so official JS/CSS lint and PHPCS
+have not passed or been claimed as passed. Earlier HTTP 502 and localhost
+restrictions prevented runtime checks; the subsequent real REST/frontend checks
+above supersede that earlier blocker for those paths only.
 
 Page/CDN caches may delay newly published articles until their cache is purged or
 expires. Already-open pages do not poll for changes. Third-party excerpt filters
@@ -187,8 +195,71 @@ but no language packs are bundled.
 Before production use, run the remaining WordPress/browser and standards checks
 in an environment with access. Future work should prioritize the compatibility
 matrix and an automated WordPress integration suite, rather than extra controls.
-Source and commits are local on `feat/category-articles`; nothing has been pushed,
-merged, published or deployed by this implementation.
+Plugin source and commits are local on `feat/category-articles`; no plugin code
+has been pushed, merged, published as a release, or deployed to a remote site.
+
+## AI tool usage
+
+AI tools are permitted by the assessment. OpenAI Codex generated substantial
+portions of the implementation, tests and documentation in this repository.
+The changes listed below were also made with Codex assistance; they are not
+presented as unaided human edits.
+
+| Tool/workflow used | What it was used for |
+| --- | --- |
+| OpenAI Codex | Reading the task document/design reference; inspecting the project; proposing the approved design; writing PHP, JavaScript, CSS, tests, build/package tools and documentation; diagnosing the local 502; creating local demo content |
+| Codex reviewer subagents | Checking the design and independently reviewing implementation; identifying REST-context and excerpt discrepancies; rechecking fixes |
+| Superpowers skills | Requirements/design review, implementation planning, test-first checks, debugging, review and verification workflow |
+| Ponytail and Caveman skills | Keeping implementation scope small and chat updates concise; these are instructions used within Codex, not separate coding assistants |
+| Codex browsing and GitHub integration | Consulting official WordPress references and verifying repository/account access; no source push or hiring-team invitation was sent |
+
+### Revisions to AI-generated output
+
+- Changed category and post preview queries to explicit REST `context: view`, so
+  Authors/Contributors are not blocked by taxonomy edit permissions.
+- Replaced raw-content excerpt extraction with WordPress's block-aware
+  `get_the_excerpt()` before plain-text trimming.
+- Moved the frontend sponsor label into the card's text area to match the editor.
+- Added explicit translation calls for the block title and description.
+- Added failing regressions for REST context and block-aware excerpts before
+  applying the fixes, then reran the affected suites.
+- Corrected the offline mobile fixture after detecting headless Edge's minimum
+  window width; added an intended-width assertion and recaptured screenshots.
+- Updated documentation to distinguish offline checks, actual WordPress evidence
+  and checks that could not be completed. No unrun standards checks are claimed.
+
+The candidate must personally review and understand the final code, validate its
+behavior and be able to explain and change it. A completed unaided walkthrough
+or manual candidate code revision has not been recorded by this session.
+
+## Assessment timeline and submission
+
+- Task issued: **26 October 2026**, confirmed by the candidate as “today.”
+- Allowed period: **five working days** from the issue date. The exact deadline,
+  counting convention, timezone and holiday calendar were not supplied.
+- Conservative working target: **Friday, 30 October 2026**, counting the issue
+  date as day one of a Monday-Friday workweek. This is a planning target, not a
+  deadline confirmed by the hiring team.
+- Estimated effort in the brief: **4–6 hours**. This is the assessment's estimate,
+  not a claim about actual time spent or an independently recorded timesheet.
+- Repository: https://github.com/jlrampola/aremedia-gutenberg (private).
+- Meaningful incremental commits are retained locally. History must not be
+  rewritten to imply unaided authorship or a fabricated development sequence.
+- Submission remains pending: finish the open validation items, obtain explicit
+  push authorization, push the incremental history, verify hiring-team access,
+  then send the repository link. The repository URL alone does not establish that
+  current local source has been submitted.
+- Hiring-team access is not confirmed. Their GitHub usernames or team identity
+  are still needed, and the invited reviewers must be able to open the private
+  repository before submission is marked complete.
+
+## Live review preparation
+
+The hiring team will schedule a **60-minute live review after submission**,
+including code explanation and small live changes **without AI tools**. Use the
+[walkthrough and practice checklist](docs/live-review.md) to prepare, then rehearse
+with AI assistants and suggestions disabled. Personal readiness must be confirmed
+by the candidate; this documentation does not claim that rehearsal has happened.
 
 ## Official references
 
