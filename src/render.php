@@ -56,6 +56,14 @@ $show_excerpt  = $attributes['showExcerpt'] ?? true;
 					<?php else : ?>
 						<h3 class="aremedia-title"><?php echo esc_html( $title ); ?></h3>
 					<?php endif; ?>
+					<?php if ( '' !== $sponsor ) : ?>
+						<p class="aremedia-sponsor">
+							<?php
+							/* translators: %s: sponsoring brand name. */
+							echo esc_html( sprintf( __( 'Sponsored by %s', 'aremedia-gutenberg' ), $sponsor ) );
+							?>
+						</p>
+					<?php endif; ?>
 				</div>
 			</a>
 			<?php if ( $is_hero && $show_excerpt ) : ?>
@@ -66,14 +74,6 @@ $show_excerpt  = $attributes['showExcerpt'] ?? true;
 				<?php if ( '' !== trim( $excerpt ) ) : ?>
 					<p class="aremedia-excerpt"><?php echo esc_html( $excerpt ); ?></p>
 				<?php endif; ?>
-			<?php endif; ?>
-			<?php if ( '' !== $sponsor ) : ?>
-				<p class="aremedia-sponsor">
-					<?php
-					/* translators: %s: sponsoring brand name. */
-					echo esc_html( sprintf( __( 'Sponsored by %s', 'aremedia-gutenberg' ), $sponsor ) );
-					?>
-				</p>
 			<?php endif; ?>
 		</article>
 	<?php endforeach; ?>

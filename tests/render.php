@@ -23,7 +23,9 @@ function __( $value, $domain = '' ) { return $value; }
 function esc_html__( $value, $domain = '' ) { return esc_html( $value ); }
 function get_permalink( $post ) { return 'https://example.test/article/' . $post->ID; }
 function get_the_title( $post ) { return $post->post_title; }
-function get_post_meta( $id, $key, $single = false ) { return 2 === $id ? '<script>Brand</script>' : ''; }
+function get_post_meta( $id, $key, $single = false ) {
+	return 2 === $id ? ( empty( $GLOBALS['preview_mode'] ) ? '<script>Brand</script>' : 'Evergreen' ) : '';
+}
 function wp_strip_all_tags( $text ) { return strip_tags( $text ); }
 function strip_shortcodes( $text ) { return preg_replace( '/\[.*?\]/', '', $text ); }
 function wp_trim_words( $text, $count, $more ) {
@@ -31,7 +33,7 @@ function wp_trim_words( $text, $count, $more ) {
 	return implode( ' ', array_slice( $words, 0, $count ) ) . ( count( $words ) > $count ? $more : '' );
 }
 function get_the_post_thumbnail( $post, $size, $attributes ) {
-	return 3 === $post->ID ? '<img src="https://example.test/image.jpg" alt="" />' : '';
+	return 3 === $post->ID && empty( $GLOBALS['preview_mode'] ) ? '<img src="https://example.test/image.jpg" alt="" />' : '';
 }
 class WP_Query {
 	public $posts;

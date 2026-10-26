@@ -1,0 +1,8 @@
+{
+	"name": "jlrampola/aremedia-gutenberg",
+	"description": "Dynamic category articles Gutenberg block.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require-dev": { "wp-coding-standards/wpcs": "^3.0" },
+	"scripts": { "lint": "phpcs --standard=phpcs.xml.dist" }
+}

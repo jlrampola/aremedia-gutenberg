@@ -5,7 +5,7 @@
  * Version: 1.0.0
  * Requires at least: 6.6
  * Requires PHP: 7.4
- * Author: John Rampola
+ * Author: jlrampola
  * License: GPL-2.0-or-later
  * Text Domain: aremedia-gutenberg
  * Domain Path: /languages
