@@ -63,6 +63,7 @@ test( 'preview queries five public posts through the shared exact-category contr
 	assert.equal( query.aremedia_category, 7 );
 	assert.equal( query.per_page, 5 );
 	assert.equal( query.status, 'publish' );
+	assert.equal( query.context, 'view' );
 	assert.equal( query._embed, true );
 	assert.equal( app.save(), null );
 } );
@@ -74,6 +75,7 @@ test( 'category dropdown includes empty categories and subsequent result pages',
 	assert.equal( select.props.options.length, 3 );
 	assert.equal( select.props.options[ 2 ].value, 101 );
 	assert.equal( app.queries[ 0 ].query.hide_empty, false );
+	assert.equal( app.queries[ 0 ].query.context, 'view' );
 	select.props.onChange( '101' );
 	assert.equal( app.changes[ 0 ].categoryId, 101 );
 } );

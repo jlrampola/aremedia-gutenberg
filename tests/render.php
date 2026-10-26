@@ -23,6 +23,9 @@ function __( $value, $domain = '' ) { return $value; }
 function esc_html__( $value, $domain = '' ) { return esc_html( $value ); }
 function get_permalink( $post ) { return 'https://example.test/article/' . $post->ID; }
 function get_the_title( $post ) { return $post->post_title; }
+function get_the_excerpt( $post ) {
+	return $GLOBALS['excerpt_override'] ?? ( $post->post_excerpt ? $post->post_excerpt : strip_shortcodes( $post->post_content ) );
+}
 function get_post_meta( $id, $key, $single = false ) {
 	return 2 === $id ? ( empty( $GLOBALS['preview_mode'] ) ? '<script>Brand</script>' : 'Evergreen' ) : '';
 }
@@ -109,4 +112,9 @@ $html = render_block_fixture( array( 'categoryId' => 7 ) );
 check( false !== strpos( $html, '29 30…' ) && false === strpos( $html, '31 32' ), 'Generated excerpt must stop at 30 words.' );
 $GLOBALS['fixtures'][0]->post_title = '';
 check( false !== strpos( render_block_fixture( array( 'categoryId' => 7 ) ), 'Untitled article' ), 'Empty titles must have an accessible link name.' );
+$GLOBALS['fixtures'][0]->post_content = '<figure><figcaption>Caption excluded by WordPress</figcaption></figure><p>Article body.</p>';
+$GLOBALS['excerpt_override'] = 'Article body.';
+$html = render_block_fixture( array( 'categoryId' => 7 ) );
+check( false === strpos( $html, 'Caption excluded' ) && false !== strpos( $html, 'Article body.' ), 'Frontend must use the block-aware WordPress excerpt, not raw content.' );
+unset( $GLOBALS['excerpt_override'] );
 echo 'PASS: ' . $GLOBALS['checks'] . " PHP rendering checks.\n";

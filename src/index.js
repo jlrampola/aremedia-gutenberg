@@ -41,7 +41,7 @@ function Edit( { attributes, setAttributes } ) {
 	const { categoryId } = attributes;
 	const data = wp.data.useSelect( ( select ) => {
 		const store = select( wp.coreData.store );
-		const categoryQuery = { per_page: 100, hide_empty: false, orderby: 'name', order: 'asc', page: 1 };
+		const categoryQuery = { context: 'view', per_page: 100, hide_empty: false, orderby: 'name', order: 'asc', page: 1 };
 		const firstPage = store.getEntityRecords( 'taxonomy', 'category', categoryQuery );
 		const pageCount = store.getEntityRecordsTotalPages( 'taxonomy', 'category', categoryQuery ) || 1;
 		let categories = firstPage ? [ ...firstPage ] : null;
@@ -54,7 +54,7 @@ function Edit( { attributes, setAttributes } ) {
 			categories = records ? categories.concat( records ) : null;
 		}
 
-		const postQuery = { per_page: 5, status: 'publish', aremedia_category: categoryId, _embed: true };
+		const postQuery = { context: 'view', per_page: 5, status: 'publish', aremedia_category: categoryId, _embed: true };
 		const posts = categoryId ? store.getEntityRecords( 'postType', 'post', postQuery ) : [];
 		if ( categoryId ) {
 			error = error || store.getResolutionError( 'getEntityRecords', [ 'postType', 'post', postQuery ] );
@@ -107,4 +107,10 @@ function Edit( { attributes, setAttributes } ) {
 	);
 }
 
-wp.blocks.registerBlockType( metadata.name, { ...metadata, edit: Edit, save: () => null } );
+wp.blocks.registerBlockType( metadata.name, {
+	...metadata,
+	title: __( 'Category Articles', 'aremedia-gutenberg' ),
+	description: __( 'Show the newest article and four smaller cards from a category.', 'aremedia-gutenberg' ),
+	edit: Edit,
+	save: () => null,
+} );

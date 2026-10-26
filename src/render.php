@@ -68,8 +68,7 @@ $show_excerpt  = $attributes['showExcerpt'] ?? true;
 			</a>
 			<?php if ( $is_hero && $show_excerpt ) : ?>
 				<?php
-				$excerpt = $article->post_excerpt ? $article->post_excerpt : strip_shortcodes( $article->post_content );
-				$excerpt = wp_trim_words( wp_strip_all_tags( $excerpt ), 30, '…' );
+				$excerpt = wp_trim_words( wp_strip_all_tags( get_the_excerpt( $article ) ), 30, '…' );
 				?>
 				<?php if ( '' !== trim( $excerpt ) ) : ?>
 					<p class="aremedia-excerpt"><?php echo esc_html( $excerpt ); ?></p>
