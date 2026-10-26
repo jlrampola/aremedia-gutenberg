@@ -47,6 +47,10 @@ function nodes( tree, predicate ) {
 	return [ ...( predicate( tree ) ? [ tree ] : [] ), ...( tree.children || [] ).flatMap( ( child ) => nodes( child, predicate ) ) ];
 }
 
+function text( tree ) {
+	return typeof tree === 'object' ? ( tree.children || [] ).map( text ).join( '' ) : String( tree );
+}
+
 const post = ( id ) => ( {
 	id,
 	link: `https://example.test/article/${ id }`,
@@ -94,7 +98,7 @@ test( 'toggles hide labels and hero excerpt, while sponsor and placeholders rema
 	const tree = app.render( { showCategory: false, showExcerpt: false } );
 	assert.equal( nodes( tree, ( node ) => [ 'aremedia-category', 'aremedia-excerpt' ].includes( node.props.className ) ).length, 0 );
 	assert.equal( nodes( tree, ( node ) => node.props.className?.includes( 'aremedia-placeholder' ) ).length, 2 );
-	assert.match( JSON.stringify( tree ), /Sponsored by Brand name/ );
+	assert.match( text( tree ), /Sponsored by Brand name/ );
 	nodes( tree, ( node ) => node.type === 'toggle' )[ 0 ].props.onChange( true );
 	assert.equal( app.changes[ 0 ].showCategory, true );
 } );

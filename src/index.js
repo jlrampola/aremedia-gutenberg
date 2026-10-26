@@ -3,7 +3,7 @@
 const { createElement: el, Fragment } = wp.element;
 const { InspectorControls, useBlockProps } = wp.blockEditor;
 const { PanelBody, SelectControl, ToggleControl, Notice, Spinner } = wp.components;
-const { __, sprintf } = wp.i18n;
+const { __ } = wp.i18n;
 
 function plainText( text ) {
 	return wp.htmlEntities.decodeEntities( ( text || '' ).replace( /<[^>]*>/g, ' ' ) ).replace( /\s+/g, ' ' ).trim();
@@ -28,8 +28,8 @@ function articlePreview( post, index, attributes, categoryName ) {
 				attributes.showCategory ? el( 'p', { className: 'aremedia-category' }, categoryName ) : null,
 				el( hero ? 'h2' : 'h3', { className: 'aremedia-title' }, title ),
 				! hero && sponsor ? el( 'p', { className: 'aremedia-sponsor' },
-					/* translators: %s: sponsoring brand name. */
-					sprintf( __( 'Sponsored by %s', 'aremedia-gutenberg' ), sponsor )
+					__( 'Sponsored by', 'aremedia-gutenberg' ), ' ',
+					el( 'span', { className: 'aremedia-sponsor-name' }, sponsor )
 				) : null
 			)
 		),

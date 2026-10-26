@@ -12,7 +12,7 @@ $GLOBALS['queries']  = array();
 function add_action( ...$args ) {}
 function add_filter( ...$args ) {}
 function get_category( $id ) {
-	return 7 === $id ? (object) array( 'name' => 'Gardening & Homes' ) : false;
+	return 7 === $id ? (object) array( 'name' => empty( $GLOBALS['reference_mode'] ) ? 'Gardening & Homes' : 'Category' ) : false;
 }
 function is_wp_error( $value ) { return false; }
 function get_block_wrapper_attributes() { return 'class="wp-block-aremedia-category-articles"'; }
@@ -27,6 +27,9 @@ function get_the_excerpt( $post ) {
 	return $GLOBALS['excerpt_override'] ?? ( $post->post_excerpt ? $post->post_excerpt : strip_shortcodes( $post->post_content ) );
 }
 function get_post_meta( $id, $key, $single = false ) {
+	if ( ! empty( $GLOBALS['reference_mode'] ) ) {
+		return 3 === $id ? 'BRAND NAME' : '';
+	}
 	return 2 === $id ? ( empty( $GLOBALS['preview_mode'] ) ? '<script>Brand</script>' : 'Evergreen' ) : '';
 }
 function wp_strip_all_tags( $text ) { return strip_tags( $text ); }

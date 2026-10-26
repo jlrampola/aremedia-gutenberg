@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { copyFileSync, mkdirSync, readFileSync, watch, writeFileSync } from 'node:fs';
+import { copyFileSync, cpSync, mkdirSync, readFileSync, watch, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath( new URL( '..', import.meta.url ) );
@@ -13,6 +13,7 @@ function build() {
 	for ( const file of [ 'block.json', 'render.php', 'style.css' ] ) {
 		copyFileSync( `${ root }/src/${ file }`, `${ root }/build/${ file }` );
 	}
+	cpSync( `${ root }/src/fonts`, `${ root }/build/fonts`, { recursive: true } );
 	writeFileSync( `${ root }/build/index.js`, script );
 	writeFileSync( `${ root }/build/index.asset.php`, `<?php\n/** Generated editor dependencies. */\nreturn array( 'dependencies' => array( 'wp-blocks', 'wp-block-editor', 'wp-components', 'wp-element', 'wp-data', 'wp-core-data', 'wp-i18n', 'wp-html-entities' ), 'version' => '${ version }' );\n` );
 	console.log( `Built Category Articles (${ version }).` );

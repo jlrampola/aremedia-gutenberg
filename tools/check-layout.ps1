@@ -9,10 +9,12 @@ $artifacts = Join-Path $pluginRoot 'artifacts'
 New-Item -ItemType Directory -Path $artifacts -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $pluginRoot 'docs/images') -Force | Out-Null
 
-foreach ($size in @(@{Name='desktop';Width=1280;Height=1600}, @{Name='mobile';Width=390;Height=1600})) {
+foreach ($size in @(@{Name='desktop';Width=1280;Height=1600}, @{Name='mobile';Width=390;Height=1600}, @{Name='reference';Width=1720;Height=2286}, @{Name='typography';Width=700;Height=477})) {
     $fixture = Join-Path $artifacts ($size.Name + '-fixture.html')
     $fixtureArgs = @((Join-Path $pluginRoot 'tests/preview.php'))
     if ($size.Name -eq 'mobile') { $fixtureArgs += '--mobile' }
+    if ($size.Name -eq 'reference') { $fixtureArgs += '--reference' }
+    if ($size.Name -eq 'typography') { $fixtureArgs += '--typography' }
     & $Php @fixtureArgs | Set-Content -LiteralPath $fixture -Encoding UTF8
     if ($LASTEXITCODE -ne 0) { throw 'PHP fixture generation failed.' }
 
@@ -20,7 +22,8 @@ foreach ($size in @(@{Name='desktop';Width=1280;Height=1600}, @{Name='mobile';Wi
     $domPath = Join-Path $artifacts ($size.Name + '.html')
     $profile = Join-Path $artifacts ('browser-' + $size.Name)
     # This disposable, offline fixture needs no browser sandbox or external resources.
-    $browserArgs = @('--headless=new', '--no-sandbox', '--disable-gpu', '--in-process-gpu',
+    $browserArgs = @('--headless=new', '--no-sandbox', '--disable-gpu', '--in-process-gpu', '--hide-scrollbars',
+        '--virtual-time-budget=5000',
         '--no-first-run', '--disable-background-networking', '--dump-dom',
         ('--user-data-dir="' + $profile + '"'), ('--screenshot="' + $screenshot + '"'),
         ('--window-size=' + $size.Width + ',' + $size.Height), ([System.Uri]$fixture).AbsoluteUri)
@@ -36,5 +39,7 @@ foreach ($size in @(@{Name='desktop';Width=1280;Height=1600}, @{Name='mobile';Wi
     if (-not (Test-Path -LiteralPath $screenshot)) { throw 'Screenshot was not created.' }
     if ((Get-Item -LiteralPath $screenshot).LastWriteTimeUtc -lt $started) { throw 'Screenshot was not updated.' }
     Copy-Item -LiteralPath $screenshot -Destination (Join-Path $pluginRoot ('docs/images/block-' + $size.Name + '.png'))
-    Write-Output ($size.Name + ': PASS (7 browser layout assertions); screenshot captured.')
+    $checkData = [System.Net.WebUtility]::HtmlDecode([regex]::Match($dom, 'data-layout-checks="([^"]+)"').Groups[1].Value) | ConvertFrom-Json
+    $assertionCount = @($checkData.PSObject.Properties).Count
+    Write-Output ($size.Name + ': PASS (' + $assertionCount + ' browser layout assertions); screenshot captured.')
 }

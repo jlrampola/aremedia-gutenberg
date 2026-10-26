@@ -13,4 +13,7 @@ test( 'build produces synchronized metadata, rendering, styles and executable ed
 	execFileSync( process.execPath, [ '--check', 'build/index.js' ], { cwd: root } );
 	assert.match( readFileSync( `${ root }/build/index.asset.php`, 'utf8' ), /wp-core-data/ );
 	assert.match( readFileSync( `${ root }/build/index.asset.php`, 'utf8' ), /wp-html-entities/ );
+	for ( const file of [ 'jost-normal.woff2', 'jost-italic.woff2', 'OFL.txt' ] ) {
+		assert.deepEqual( readFileSync( `${ root }/build/fonts/${ file }` ), readFileSync( `${ root }/src/fonts/${ file }` ) );
+	}
 } );

@@ -27,7 +27,8 @@ $archive = [System.IO.Compression.ZipFile]::OpenRead($zipPath)
 try {
     $entries = @($archive.Entries | ForEach-Object { $_.FullName })
     foreach ($file in @('aremedia-gutenberg.php', 'README.md', 'build/block.json', 'build/index.js',
-        'build/index.asset.php', 'build/render.php', 'build/style.css', 'docs/validation.md')) {
+        'build/index.asset.php', 'build/render.php', 'build/style.css', 'build/fonts/jost-normal.woff2',
+        'build/fonts/jost-italic.woff2', 'build/fonts/OFL.txt', 'docs/validation.md')) {
         if ($entries -notcontains ('aremedia-gutenberg/' + $file)) { throw ('ZIP missing ' + $file) }
     }
     if ($entries | Where-Object { $_ -match '(^|/)(node_modules|vendor|\.git|wp-config\.php)(/|$)' }) {

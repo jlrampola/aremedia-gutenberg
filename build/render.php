@@ -59,9 +59,9 @@ $show_excerpt  = $attributes['showExcerpt'] ?? true;
 					<?php if ( '' !== $sponsor ) : ?>
 						<p class="aremedia-sponsor">
 							<?php
-							/* translators: %s: sponsoring brand name. */
-							echo esc_html( sprintf( __( 'Sponsored by %s', 'aremedia-gutenberg' ), $sponsor ) );
+							echo esc_html__( 'Sponsored by', 'aremedia-gutenberg' );
 							?>
+							<span class="aremedia-sponsor-name"><?php echo esc_html( $sponsor ); ?></span>
 						</p>
 					<?php endif; ?>
 				</div>
