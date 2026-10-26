@@ -1,6 +1,32 @@
-/node_modules/
-/vendor/
-/.tools/
-/artifacts/
-/.superpowers/
+# Retain only this plugin's source, tests and submission files.
+/*
+!/.gitignore
+!/.gitattributes
+!/.editorconfig
+!/aremedia-gutenberg.php
+!/src/
+!/tests/
+!/tools/
+!/docs/
+!/reference/
+!/README.md
+!/LICENSE
+!/package.json
+!/package-lock.json
+!/composer.json
+!/composer.lock
+!/phpcs.xml.dist
+!/WordPress Gutenberg Block Technical Task.docx
+
+# Ignore dependencies and local files inside retained directories too.
+/build/
+node_modules/
+vendor/
+.tools/
+artifacts/
+.superpowers/
+.env
+.env.*
 *.log
+.DS_Store
+Thumbs.db

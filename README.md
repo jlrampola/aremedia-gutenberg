@@ -16,7 +16,7 @@ Screenshot shows the WordPress frontend with five demo articles.
 | --- | --- |
 | WordPress | 6.6+ with the block editor |
 | PHP | 7.4+ |
-| Node.js, development only | 22.22.2+ on Node 22, or 24.15.0+ on Node 24 |
+| Node.js, required to build | 22.22.2+ on Node 22, or 24.15.0+ on Node 24 |
 | Browser | Current Chrome/Edge, Firefox or Safari with CSS container queries |
 
 Checks have used WordPress 7.1.2, PHP 8.2.29 and Node.js 24.21.0. Minimum versions
@@ -24,14 +24,19 @@ have not been tested. Composer 2 is needed only for PHP coding-standards checks.
 
 ## Installation
 
-1. Download `aremedia-gutenberg-1.0.0.zip`.
-2. In WordPress, open **Plugins → Add New Plugin → Upload Plugin**.
-3. Upload the ZIP, install it and activate **Are Media Category Articles**.
-4. Open a page in the block editor and insert **Category Articles**.
+1. Clone or download the source repository into a folder named `aremedia-gutenberg`.
+2. Open a terminal in that folder and run `npm run build`.
+3. Run `npm test` to check the generated assets and editor contracts.
+4. Place the folder in `wp-content/plugins/aremedia-gutenberg/`, including the
+   newly generated `build/` directory.
+5. Activate **Are Media Category Articles** in WordPress, then insert the block.
 
-Alternatively, place the source repository in
-`wp-content/plugins/aremedia-gutenberg/`. The included `build/` files are ready to
-use; Node.js and Composer are not required for installation.
+The source download excludes `build/`; generate it **before activation**.
+Building needs Node.js but does not need `npm install` or Composer.
+
+On Windows, after building, `npm run package` creates an installable ZIP in
+`artifacts/`. Upload that ZIP through **Plugins → Add New Plugin → Upload Plugin**.
+This generated installation ZIP includes the runtime `build/` files.
 
 ## Usage
 
@@ -57,7 +62,7 @@ src/block.json          Block registration and saved settings
 src/index.js            Inspector controls and REST editor preview
 src/render.php          Dynamic frontend template
 src/style.css           Shared responsive layout
-build/                  Generated production assets; committed
+build/                  Generated locally by npm run build; ignored by Git
 tests/                 Editor, renderer and build checks
 tools/                 Build/watch, browser checks and Windows packaging
 docs/                  Screenshots, validation and review preparation
@@ -132,4 +137,4 @@ The candidate must personally review, understand and explain the final code.
 [Repository](https://github.com/jlrampola/aremedia-gutenberg) ·
 [Live-review preparation](docs/live-review.md). No source push or submission yet;
 hiring-team access still needs verification. License: GPL-2.0-or-later.
-Bundled Jost fonts use the [SIL Open Font License](build/fonts/OFL.txt).
+Bundled Jost fonts use the [SIL Open Font License](src/fonts/OFL.txt).
