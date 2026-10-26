@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset name="Are Media Gutenberg">
+	<description>WordPress Coding Standards for plugin production PHP.</description>
+	<file>aremedia-gutenberg.php</file>
+	<file>src/render.php</file>
+	<arg name="extensions" value="php"/>
+	<arg name="basepath" value="."/>
+	<config name="installed_paths" value="vendor/wp-coding-standards/wpcs,vendor/phpcsstandards/phpcsutils,vendor/phpcsstandards/phpcsextra"/>
+	<config name="minimum_supported_wp_version" value="6.6"/>
+	<rule ref="WordPress"/>
+	<rule ref="WordPress.WP.I18n">
+		<properties><property name="text_domain" type="array"><element value="aremedia-gutenberg"/></property></properties>
+	</rule>
+</ruleset>

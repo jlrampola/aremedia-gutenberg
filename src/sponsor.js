@@ -1,0 +1,23 @@
+/* global wp */
+
+const { createElement: el } = wp.element;
+const { __ } = wp.i18n;
+
+function SponsorPanel() {
+	const postType = wp.data.useSelect( ( select ) => select( 'core/editor' ).getCurrentPostType(), [] );
+	const [ meta, setMeta ] = wp.coreData.useEntityProp( 'postType', postType, 'meta' );
+	if ( postType !== 'post' || ! meta ) {
+		return null;
+	}
+	return el( wp.editor.PluginDocumentSettingPanel, {
+		name: 'aremedia-sponsorship',
+		title: __( 'Sponsorship', 'aremedia-gutenberg' ),
+	}, el( wp.components.TextControl, {
+		label: __( 'Sponsor name', 'aremedia-gutenberg' ),
+		help: __( 'Shown on smaller Category Articles cards only. Leave blank for no sponsor.', 'aremedia-gutenberg' ),
+		value: meta.aremedia_sponsor || '',
+		onChange: ( value ) => setMeta( { ...meta, aremedia_sponsor: value } ),
+	} ) );
+}
+
+wp.plugins.registerPlugin( 'aremedia-sponsorship', { render: SponsorPanel } );
