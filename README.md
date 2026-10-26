@@ -1,141 +1,214 @@
-# Are Media Category Articles
+﻿# Are Media Category Articles
 
-A Gutenberg block that displays the newest article from a selected category as a
-hero, followed by up to four smaller cards. Content updates on new page requests.
+This WordPress Gutenberg plugin was developed with AI assistance to display up to
+five posts from a selected category: the newest as a featured article, followed
+by four smaller cards.
+The responsive layout includes optional category labels and featured-article
+subtext, plus a bundled placeholder for missing images.
 
-![Category Articles block in WordPress](docs/images/wordpress-desktop.png)
+![Category Articles block on the WordPress frontend](docs/images/wordpress-desktop.png)
 
-Screenshot shows the WordPress frontend with five demo articles.
-[Mobile screenshot](docs/images/wordpress-mobile.png) ·
-[Reference layout comparison](docs/images/block-reference.png).
-[Typography comparison](docs/images/block-typography.png).
+[Mobile screenshot](docs/images/wordpress-mobile.png)
 
 ## System requirements
 
-| Component | Supported target |
-| --- | --- |
-| WordPress | 6.6+ with the block editor |
-| PHP | 7.4+ |
-| Node.js, required to build | 22.22.2+ on Node 22, or 24.15.0+ on Node 24 |
-| Browser | Current Chrome/Edge, Firefox or Safari with CSS container queries |
+| Component | Requirement | Verified development environment |
+| --- | --- | --- |
+| WordPress | 6.6+ with the block editor, declared in plugin metadata | 7.1.2 |
+| PHP | 7.4+, declared in plugin metadata | 8.2.29 |
+| Node.js | `^22.22.2` or `^24.15.0`, declared in `package.json` | 24.21.0 |
+| npm | No version range declared; use npm supplied with a supported Node.js release | 11.19.0 for build/tests; dependency installation unverified |
 
-Checks have used WordPress 7.1.2, PHP 8.2.29 and Node.js 24.21.0. Minimum versions
-have not been tested. Composer 2 is needed only for PHP coding-standards checks.
 
-## Installation
+Additional prerequisites: a working WordPress installation, plugin installation
+permissions, and a browser supporting CSS container queries. Git and access to
+this private GitHub repository are needed for cloning. Composer is optional for
+PHP coding-standards checks. The optional browser-check script requires Windows
+PowerShell, PHP and Microsoft Edge.
 
-1. Clone or download the source repository into a folder named `aremedia-gutenberg`.
-2. Open a terminal in that folder and run `npm run build`.
-3. Run `npm test` to check the generated assets and editor contracts.
-4. Place the folder in `wp-content/plugins/aremedia-gutenberg/`, including the
-   newly generated `build/` directory.
-5. Activate **Are Media Category Articles** in WordPress, then insert the block.
+## Installation from GitHub
 
-The source download excludes `build/`; generate it **before activation**.
-Building needs Node.js but does not need `npm install` or Composer.
+Both methods require access to the private repository and Node.js/npm to build
+the plugin. Compiled assets in `build/` are excluded from GitHub source downloads.
 
-On Windows, after building, `npm run package` creates an installable ZIP in
-`artifacts/`. Upload that ZIP through **Plugins → Add New Plugin → Upload Plugin**.
-This generated installation ZIP includes the runtime `build/` files.
+### Method 1: Clone with Git
+
+1. Obtain access to [jlrampola/aremedia-gutenberg](https://github.com/jlrampola/aremedia-gutenberg)
+   and authenticate Git with GitHub using your usual secure method.
+2. From your WordPress installation directory, clone into `wp-content/plugins/`:
+
+   ```sh
+   cd wp-content/plugins
+   git clone https://github.com/jlrampola/aremedia-gutenberg.git aremedia-gutenberg
+   cd aremedia-gutenberg
+   ```
+
+3. Install development dependencies and build production assets:
+
+   ```sh
+   npm install
+   npm run build
+   ```
+
+   `npm install` supplies the JavaScript/CSS lint tools. The build itself has no
+   external dependencies, so `npm run build` also works without installation if
+   you only need to run the plugin.
+4. Open **Plugins > Installed Plugins** in WordPress and activate
+   **Are Media Category Articles**.
+
+### Method 2: Download the repository ZIP
+
+1. Sign in to GitHub and open
+   [jlrampola/aremedia-gutenberg](https://github.com/jlrampola/aremedia-gutenberg).
+   Select the branch you want to install, then choose **Code > Download ZIP**.
+2. Extract the ZIP and rename its extracted top-level folder to
+   `aremedia-gutenberg` (remove any branch-name suffix).
+3. Move that folder into your WordPress installation's `wp-content/plugins/`
+   directory. Ensure the entry file is directly at
+   `wp-content/plugins/aremedia-gutenberg/aremedia-gutenberg.php`, without an
+   extra nested folder.
+4. Open a terminal in `wp-content/plugins/aremedia-gutenberg/` and run:
+
+   ```sh
+   npm install
+   npm run build
+   ```
+
+   As with Method 1, dependency installation supplies lint tools; the build can
+   run independently if you only need to use the plugin.
+5. Open **Plugins > Installed Plugins** in WordPress and activate
+   **Are Media Category Articles**.
+
+The repository ZIP is source code, not a ready-to-install WordPress ZIP. Extract
+and build it before activation. For either method, keep the generated `build/`
+directory inside the plugin folder and rebuild after updating the source.
 
 ## Usage
 
-1. Insert **Category Articles** and open its **Article settings** sidebar.
-2. Choose a category.
-3. Toggle **Display category label** and **Show subtext (excerpt)** as needed.
-4. Check the preview and save the page.
+1. Edit a post or page with the block editor. Open the inserter and search for
+   **Category Articles**, also listed under **Widgets**.
+2. Select the block and open **Article settings** in the block settings sidebar.
+3. Choose a **Category**. Empty categories are included in the dropdown.
+4. Adjust the toggles, both enabled by default:
+   - **Display category label** shows the selected category's name on every article.
+   - **Show subtext (excerpt)** shows the featured article's excerpt, up to 30 words.
+5. Check the live preview, then save or publish the containing post/page.
 
-The newest published post becomes the hero; the next four appear left to right,
-then on the next row. Equal publication dates are ordered by post ID descending.
-Sticky priority is ignored. Fewer posts produce fewer cards; empty categories
-render nothing on the frontend. Missing images use neutral placeholders.
+Only published, non-password-protected posts directly assigned to the selected
+category appear; child-category assignments alone do not qualify. Publication
+date determines order, newest first; equal dates use post ID descending. Sticky
+posts receive no priority. The first post is featured; the next four fill the
+desktop grid left to right, then the next row. On narrow screens, cards stack.
 
-Optional sponsor: add a post custom field named `aremedia_sponsor` with a brand
-name. Smaller cards display “Sponsored by …”; the hero does not. Enable the native
-Custom fields panel in editor Preferences if needed.
+Fewer than five posts produce only the available articles. An empty category
+shows an editor message and renders nothing on the frontend. Missing featured
+images use the bundled neutral SVG placeholder.
+
+New publications appear on subsequent frontend page requests without editing or
+resaving the block. Already-open pages do not refresh automatically, and page/CDN
+caches may delay changes.
+
+Optional sponsorship: edit an article and open **Post > Sponsorship** in the
+editor settings sidebar. Enter a **Sponsor name**, then save or update the post.
+Leave the field blank and save to remove sponsorship. Smaller cards display
+**Sponsored by [brand]**; the featured article does not. Existing
+`aremedia_sponsor` custom-field values appear in this field automatically.
 
 ## Development
 
 ```text
-aremedia-gutenberg.php   Plugin setup, shared query and sponsor metadata
-src/block.json          Block registration and saved settings
-src/index.js            Inspector controls and REST editor preview
+aremedia-gutenberg.php   Registration, shared query rules, sponsor metadata
+src/block.json          Block metadata and saved settings
+src/index.js            Editor controls and REST-backed preview
+src/sponsor.js          Dedicated sponsor field in the post settings sidebar
 src/render.php          Dynamic frontend template
-src/style.css           Shared responsive layout
-src/assets/             Bundled neutral missing-image placeholder
-build/                  Generated locally by npm run build; ignored by Git
-tests/                 Editor, renderer and build checks
-tools/                 Build/watch, browser checks and Windows packaging
-docs/                  Screenshots, validation and review preparation
+src/style.css           Shared editor/frontend styles
+src/assets/             Missing-image placeholder SVG
+src/fonts/              Bundled Jost fonts and license
+build/                  Generated runtime files; ignored by Git
+tests/                  Node/PHP tests and preview fixtures
+tools/                  Build/watch and browser checks
+docs/images/            Block screenshots
+reference/              Supplied typography reference
 ```
 
-Run from the repository root:
+Run commands from the repository root:
 
-```sh
-npm run build       # Generate production assets; no downloads needed
-npm start           # Build and watch src/; stop with Ctrl+C
-npm test            # Node tests
-npm run test:php    # PHP tests; PHP must be on PATH
-```
+| Command | Purpose |
+| --- | --- |
+| `npm install` | Install development dependencies (`@wordpress/scripts` 37.0.0) |
+| `npm run build` | Generate production assets using `node tools/build.mjs` |
+| `npm start` | Build and watch `src/` using `node tools/build.mjs --watch`; stop with Ctrl+C |
+| `npm test` | Run Node editor-contract and build tests |
+| `npm run test:php` | Run PHP renderer/query tests; requires `php` on PATH |
+| `npm run lint:js` | Run WordPress JavaScript linting |
+| `npm run lint:css` | Run WordPress CSS linting |
 
-For official coding-standards checks:
+For PHP coding standards, run `composer install`, then `composer lint`.
+Edit `src/` and rebuild rather than editing generated files. No dependency
+lockfiles are currently committed. Browser checks write temporary files outside
+the repository and retain their screenshots in `docs/images/`.
 
-```sh
-npm install
-npm run lint:js
-npm run lint:css
-composer install
-composer lint
-```
+### Implementation decisions
 
-On Windows, `npm run package` creates the checked installable ZIP in `artifacts/`.
-Edit `src/`, then rebuild; do not edit generated files in `build/`.
-
-### Implementation assumptions
-
-- Only direct category assignments are included, not child categories.
-- Labels use the selected category. Both display toggles default to on.
-- Only published, non-password-protected posts appear.
-- Hero excerpts use WordPress's excerpt API, trimmed to 30 words.
-- Headlines use Times New Roman; labels, excerpts and sponsor prefixes use locally
-  bundled Jost, matched against `reference/typography.png`.
-- Hero subtext stays at 15px, normal style and weight 400 at every block width.
-- PHP and the editor share query rules through the existing posts REST endpoint.
-- Frontend output is dynamic and needs no JavaScript. Open pages do not poll;
-  page/CDN caches may delay updates.
+- The block is dynamic: it saves settings, not article snapshots. PHP queries posts on each
+  uncached frontend render; no frontend JavaScript is required.
+- The editor uses WordPress core-data and the existing posts REST endpoint, with a
+  scoped `aremedia_category` parameter sharing the PHP query rules.
+- The frontend uses WordPress's excerpt API. Third-party excerpt filters can
+  cause differences from the REST-based editor preview.
+- The selected category supplies every category label. Sponsorship does not
+  suppress that label; excerpts appear only on the featured article.
+- Headlines use Times New Roman; supporting text uses locally bundled Jost.
+  These are visual matches to the reference, whose original font names were
+  unavailable. Featured subtext uses 15px, normal style and weight 400.
 
 ## AI tool usage
 
-| Which tools were used | What they were used for |
+The following tools were used during development:
+
+| Tool or workflow | Purpose |
 | --- | --- |
-| OpenAI Codex, including reviewer agents | Requirements/design, implementation, tests, documentation, debugging and code review |
-| Superpowers, Ponytail and Caveman | Workflow, scope and response-style instructions within Codex |
-| Codex browsing and GitHub integration | Official WordPress references and repository/account verification |
+| OpenAI Codex, including reviewer agents | Requirements/design analysis, implementation, tests, debugging, documentation and code review |
+| Superpowers, Ponytail and Caveman skills within Codex | Development workflow, scope control and response style |
+| Codex browsing and GitHub integration | Consulting official WordPress documentation and checking repository/account access |
 
-**Modifications to generated output:** set public REST context for editorial
-roles, switched to WordPress's block-aware excerpt API, aligned sponsor placement,
-added block-title/description translations, corrected the mobile test fixture,
-and matched measured reference typography, image proportions, spacing and rules.
-Regression checks were added for the REST-context and excerpt fixes.
+### Changes to AI-generated output
 
-Substantial code, tests and documentation were AI-generated. These revisions were
-also AI-assisted; no unaided human edits or completed no-AI rehearsal are claimed.
-The candidate must personally review, understand and explain the final code.
+The generated output was refined with AI assistance. Those revisions
+included public REST context for editorial roles, WordPress's block-aware
+excerpt API, sponsor placement, translations and the mobile test fixture.
+Typography, spacing and image proportions were adjusted against the supplied
+references, and the missing-image fallback was replaced with a bundled SVG.
+Regression checks accompanied the REST-context and excerpt corrections.
+The dedicated sponsor panel and its tests were also added with AI assistance.
 
-## Known limitations and possible improvements
+Substantial parts of the code, tests and documentation were AI-generated.
+These revisions were also AI-assisted and are not presented as unaided manual
+edits. The developer's independent code review and no-AI rehearsal remain pending.
 
-- Minimum-version, cross-browser and assistive-technology checks remain incomplete.
-  WordPress editor controls, save/reopen and frontend checks passed.
-  See [validation results](docs/validation.md).
-- Registry access blocked standards-tool installation; JS/CSS lint and PHPCS have
-  not passed. Dependency lockfiles remain pending.
-- Third-party excerpt filters can cause preview differences. Manual excerpts give
-  editors control over exact copy.
-- Language packs are not bundled. Editorial plugins may affect Custom fields.
-- Prioritize remaining WordPress integration, compatibility and accessibility
-  checks before adding more controls.
+## Known limitations and possible future improvements
 
-[Repository](https://github.com/jlrampola/aremedia-gutenberg) ·
-[Live-review preparation](docs/live-review.md). No source push or submission yet;
-hiring-team access still needs verification. License: GPL-2.0-or-later.
-Bundled Jost fonts use the [SIL Open Font License](src/fonts/OFL.txt).
+| Current feature limitation | Possible future improvement |
+| --- | --- |
+| One category per block; only standard posts directly assigned to it are included. | Optional child-category inclusion or multiple-category selection. |
+| Fixed maximum of five posts, ordered newest first; no pagination or manual selection. | Configurable article count or editorial post selection. |
+| Excerpts appear only on the featured article and are limited to 30 words. | Configurable excerpt length and optional card excerpts. |
+| New publications appear on new page requests; open pages do not update automatically, and caches may delay changes. | Optional automatic refresh with cache-aware updates. |
+| Sponsorship supports a text brand name on smaller cards only. | Sponsor logos or optional featured-article sponsorship. |
+
+These are optional enhancements, not implemented features. The current controls
+remain limited to category selection, category labels and featured-article subtext;
+sponsor names are edited separately in the post's Sponsorship panel.
+
+## Validation status
+
+Build, watch and tests have been exercised through the AI-assisted workflow.
+The sponsor panel was verified in WordPress for loading an existing name,
+saving a changed name, clearing it and retaining those changes after reopening.
+Dependency installation and official JS/CSS/PHP standards checks remain blocked.
+Minimum-version, cross-browser, role-specific and full keyboard/screen-reader
+checks and fresh-clone installation remain unverified.
+
+License: GPL-2.0-or-later. Bundled Jost fonts use the
+[SIL Open Font License](src/fonts/OFL.txt).

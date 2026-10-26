@@ -8,6 +8,8 @@
 !/tests/
 !/tools/
 !/docs/
+/docs/*
+!/docs/images/
 !/reference/
 !/README.md
 !/LICENSE
@@ -23,7 +25,6 @@
 node_modules/
 vendor/
 .tools/
-artifacts/
 .superpowers/
 .env
 .env.*

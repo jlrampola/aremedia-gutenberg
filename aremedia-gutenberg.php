@@ -35,6 +35,24 @@ function aremedia_gutenberg_register() {
 }
 add_action( 'init', 'aremedia_gutenberg_register' );
 
+/** Load the sponsor panel only in the standard post block editor. */
+function aremedia_gutenberg_enqueue_sponsor_editor() {
+	$screen = get_current_screen();
+	if ( ! $screen || 'post' !== $screen->post_type ) {
+		return;
+	}
+	$asset = require __DIR__ . '/build/sponsor.asset.php';
+	wp_enqueue_script(
+		'aremedia-sponsor-editor',
+		plugins_url( 'build/sponsor.js', __FILE__ ),
+		$asset['dependencies'],
+		$asset['version'],
+		true
+	);
+	wp_set_script_translations( 'aremedia-sponsor-editor', 'aremedia-gutenberg', __DIR__ . '/languages' );
+}
+add_action( 'enqueue_block_editor_assets', 'aremedia_gutenberg_enqueue_sponsor_editor' );
+
 /**
  * Limit sponsor changes to users who can edit the owning post.
  *

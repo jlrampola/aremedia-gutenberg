@@ -11,6 +11,10 @@ test( 'build produces synchronized metadata, rendering, styles and executable ed
 		assert.equal( readFileSync( `${ root }/build/${ file }`, 'utf8' ), readFileSync( `${ root }/src/${ file }`, 'utf8' ) );
 	}
 	execFileSync( process.execPath, [ '--check', 'build/index.js' ], { cwd: root } );
+	execFileSync( process.execPath, [ '--check', 'build/sponsor.js' ], { cwd: root } );
+	assert.ok( readFileSync( `${ root }/build/sponsor.js`, 'utf8' ).includes( readFileSync( `${ root }/src/sponsor.js`, 'utf8' ) ) );
+	assert.match( readFileSync( `${ root }/build/sponsor.asset.php`, 'utf8' ), /wp-editor/ );
+	assert.match( readFileSync( `${ root }/build/sponsor.asset.php`, 'utf8' ), /wp-plugins/ );
 	assert.match( readFileSync( `${ root }/build/index.asset.php`, 'utf8' ), /wp-core-data/ );
 	assert.match( readFileSync( `${ root }/build/index.asset.php`, 'utf8' ), /wp-html-entities/ );
 	for ( const file of [ 'jost-normal.woff2', 'jost-italic.woff2', 'OFL.txt' ] ) {
