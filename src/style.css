@@ -93,7 +93,10 @@
 
 .wp-block-aremedia-category-articles .aremedia-excerpt {
 	margin: clamp(8px, calc(2.12766cqw - 3.234px), 32px) 0 0;
-	font-size: clamp(15px, 2.411576cqw, 40px);
+	font-family: "AreMedia Jost", Arial, sans-serif;
+	font-size: 15px;
+	font-style: normal;
+	font-weight: 400;
 	line-height: 1.2;
 	overflow-wrap: anywhere;
 }

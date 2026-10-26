@@ -68,11 +68,13 @@ window.addEventListener( 'load', async function () {
 		safeSponsor: ! document.querySelector( 'article script' ) && document.querySelector( '.aremedia-sponsor' ).textContent.includes( '<?php echo $reference_fixture ? 'BRAND NAME' : 'Evergreen'; ?>' ),
 	};
 	checks.localFont = Array.from( document.fonts ).some( font => font.family.replaceAll( '"', '' ) === 'AreMedia Jost' && font.status === 'loaded' );
+	const subtextStyle = getComputedStyle( document.querySelector( '.aremedia-excerpt' ) );
+	checks.subtext = subtextStyle.fontFamily.includes( 'AreMedia Jost' ) && subtextStyle.fontSize === '15px' && subtextStyle.fontWeight === '400' && subtextStyle.fontStyle === 'normal';
 	if ( <?php echo $typography_fixture ? 'true' : 'false'; ?> ) { delete checks.heroRatio; }
 	if ( <?php echo $reference_fixture && ! $typography_fixture ? 'true' : 'false'; ?> ) {
 		const card = document.querySelector( '.aremedia-card' );
 		checks.referenceType = Math.abs( parseFloat( getComputedStyle( document.querySelector( '.aremedia-hero .aremedia-title' ) ).fontSize ) - 92 ) < 0.25 && Math.abs( parseFloat( getComputedStyle( card.querySelector( '.aremedia-title' ) ).fontSize ) - 58 ) < 0.1;
-		checks.referenceGeometry = Math.abs( thumbnail.top - 1528 ) < 3 && Math.abs( second.left - 880 ) < 1 && Math.abs( card.querySelector( '.aremedia-copy' ).getBoundingClientRect().left - 368 ) < 1;
+		checks.referenceGeometry = Math.abs( thumbnail.top - document.querySelector( '.aremedia-grid' ).getBoundingClientRect().top - 34 ) < 1 && Math.abs( second.left - 880 ) < 1 && Math.abs( card.querySelector( '.aremedia-copy' ).getBoundingClientRect().left - 368 ) < 1;
 	}
 	if ( <?php echo $typography_fixture ? 'true' : 'false'; ?> ) {
 		const cardTitle = getComputedStyle( cards[ 0 ].querySelector( '.aremedia-title' ) );
