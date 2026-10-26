@@ -62,6 +62,7 @@ src/block.json          Block registration and saved settings
 src/index.js            Inspector controls and REST editor preview
 src/render.php          Dynamic frontend template
 src/style.css           Shared responsive layout
+src/assets/             Bundled neutral missing-image placeholder
 build/                  Generated locally by npm run build; ignored by Git
 tests/                 Editor, renderer and build checks
 tools/                 Build/watch, browser checks and Windows packaging

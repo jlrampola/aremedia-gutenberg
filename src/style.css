@@ -56,7 +56,7 @@
 }
 
 .wp-block-aremedia-category-articles .aremedia-placeholder {
-	background: repeating-linear-gradient(45deg, #e4e4e4, #e4e4e4 24px, #d2d2d2 24px, #d2d2d2 26px);
+	background: #f1f3f0 url("./assets/placeholder.svg") center / cover no-repeat;
 }
 
 .wp-block-aremedia-category-articles .aremedia-image img {

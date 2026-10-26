@@ -33,6 +33,8 @@ foreach ( array( 'jost-normal.woff2', 'jost-italic.woff2' ) as $font ) {
 	$data = base64_encode( file_get_contents( dirname( __DIR__ ) . '/build/fonts/' . $font ) );
 	$css  = str_replace( './fonts/' . $font, 'data:font/woff2;base64,' . $data, $css );
 }
+$placeholder = base64_encode( file_get_contents( dirname( __DIR__ ) . '/build/assets/placeholder.svg' ) );
+$css = str_replace( './assets/placeholder.svg', 'data:image/svg+xml;base64,' . $placeholder, $css );
 $mobile_fixture = in_array( '--mobile', $argv, true );
 echo '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
 echo '<title>Category Articles — offline layout fixture</title><style>body{margin:0;background:#fff}main{max-width:1100px;margin:32px auto;padding:0 24px}' . $css . '</style>';
@@ -68,6 +70,7 @@ window.addEventListener( 'load', async function () {
 		safeSponsor: ! document.querySelector( 'article script' ) && document.querySelector( '.aremedia-sponsor' ).textContent.includes( '<?php echo $reference_fixture ? 'BRAND NAME' : 'Evergreen'; ?>' ),
 	};
 	checks.localFont = Array.from( document.fonts ).some( font => font.family.replaceAll( '"', '' ) === 'AreMedia Jost' && font.status === 'loaded' );
+	checks.placeholderAsset = getComputedStyle( document.querySelector( '.aremedia-placeholder' ) ).backgroundImage.includes( 'data:image/svg+xml;base64,' );
 	const subtextStyle = getComputedStyle( document.querySelector( '.aremedia-excerpt' ) );
 	checks.subtext = subtextStyle.fontFamily.includes( 'AreMedia Jost' ) && subtextStyle.fontSize === '15px' && subtextStyle.fontWeight === '400' && subtextStyle.fontStyle === 'normal';
 	if ( <?php echo $typography_fixture ? 'true' : 'false'; ?> ) { delete checks.heroRatio; }

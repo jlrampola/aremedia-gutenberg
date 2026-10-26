@@ -16,4 +16,5 @@ test( 'build produces synchronized metadata, rendering, styles and executable ed
 	for ( const file of [ 'jost-normal.woff2', 'jost-italic.woff2', 'OFL.txt' ] ) {
 		assert.deepEqual( readFileSync( `${ root }/build/fonts/${ file }` ), readFileSync( `${ root }/src/fonts/${ file }` ) );
 	}
+	assert.deepEqual( readFileSync( `${ root }/build/assets/placeholder.svg` ), readFileSync( `${ root }/src/assets/placeholder.svg` ) );
 } );

@@ -14,6 +14,7 @@ function build() {
 		copyFileSync( `${ root }/src/${ file }`, `${ root }/build/${ file }` );
 	}
 	cpSync( `${ root }/src/fonts`, `${ root }/build/fonts`, { recursive: true } );
+	cpSync( `${ root }/src/assets`, `${ root }/build/assets`, { recursive: true } );
 	writeFileSync( `${ root }/build/index.js`, script );
 	writeFileSync( `${ root }/build/index.asset.php`, `<?php\n/** Generated editor dependencies. */\nreturn array( 'dependencies' => array( 'wp-blocks', 'wp-block-editor', 'wp-components', 'wp-element', 'wp-data', 'wp-core-data', 'wp-i18n', 'wp-html-entities' ), 'version' => '${ version }' );\n` );
 	console.log( `Built Category Articles (${ version }).` );
