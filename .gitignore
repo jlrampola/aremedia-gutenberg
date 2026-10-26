@@ -1,16 +1,28 @@
-# Retain only this plugin's source, tests and submission files.
+# Retain plugin code, builds, development tooling and essential documentation.
 /*
 !/.gitignore
 !/.gitattributes
 !/.editorconfig
 !/aremedia-gutenberg.php
 !/src/
+!/build/
 !/tests/
+/tests/*
+!/tests/build.test.mjs
+!/tests/editor.test.mjs
+!/tests/sponsor.test.mjs
+!/tests/render.php
+!/tests/preview.php
 !/tools/
+/tools/*
+!/tools/build.mjs
+!/tools/check-layout.ps1
 !/docs/
 /docs/*
 !/docs/images/
-!/reference/
+/docs/images/*
+!/docs/images/wordpress-desktop.png
+!/docs/images/wordpress-mobile.png
 !/README.md
 !/LICENSE
 !/package.json
@@ -18,10 +30,8 @@
 !/composer.json
 !/composer.lock
 !/phpcs.xml.dist
-!/WordPress Gutenberg Block Technical Task.docx
 
 # Ignore dependencies and local files inside retained directories too.
-/build/
 node_modules/
 vendor/
 .tools/

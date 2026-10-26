@@ -16,9 +16,11 @@ subtext, plus a bundled placeholder for missing images.
 | --- | --- | --- |
 | WordPress | 6.6+ with the block editor, declared in plugin metadata | 7.1.2 |
 | PHP | 7.4+, declared in plugin metadata | 8.2.29 |
-| Node.js | `^22.22.2` or `^24.15.0`, declared in `package.json` | 24.21.0 |
-| npm | No version range declared; use npm supplied with a supported Node.js release | 11.19.0 for build/tests; dependency installation unverified |
+| Node.js (development only) | `^22.22.2` or `^24.15.0`, declared in `package.json` | 24.21.0 |
+| npm (development only) | No version range declared; use npm supplied with a supported Node.js release | 11.19.0 for build/tests; dependency installation unverified |
 
+Compiled assets are included, so plugin users do not need Node.js, npm, Composer
+or a manual build. Node.js/npm are required only to rebuild or test source changes.
 
 Additional prerequisites: a working WordPress installation, plugin installation
 permissions, and a browser supporting CSS container queries. Git and access to
@@ -28,8 +30,8 @@ PowerShell, PHP and Microsoft Edge.
 
 ## Installation from GitHub
 
-Both methods require access to the private repository and Node.js/npm to build
-the plugin. Compiled assets in `build/` are excluded from GitHub source downloads.
+Both methods require access to the private repository. Compiled assets in
+`build/` are included in Git clones and repository ZIP downloads, ready to use.
 
 ### Method 1: Clone with Git
 
@@ -40,20 +42,9 @@ the plugin. Compiled assets in `build/` are excluded from GitHub source download
    ```sh
    cd wp-content/plugins
    git clone https://github.com/jlrampola/aremedia-gutenberg.git aremedia-gutenberg
-   cd aremedia-gutenberg
    ```
 
-3. Install development dependencies and build production assets:
-
-   ```sh
-   npm install
-   npm run build
-   ```
-
-   `npm install` supplies the JavaScript/CSS lint tools. The build itself has no
-   external dependencies, so `npm run build` also works without installation if
-   you only need to run the plugin.
-4. Open **Plugins > Installed Plugins** in WordPress and activate
+3. Open **Plugins > Installed Plugins** in WordPress and activate
    **Are Media Category Articles**.
 
 ### Method 2: Download the repository ZIP
@@ -67,21 +58,11 @@ the plugin. Compiled assets in `build/` are excluded from GitHub source download
    directory. Ensure the entry file is directly at
    `wp-content/plugins/aremedia-gutenberg/aremedia-gutenberg.php`, without an
    extra nested folder.
-4. Open a terminal in `wp-content/plugins/aremedia-gutenberg/` and run:
-
-   ```sh
-   npm install
-   npm run build
-   ```
-
-   As with Method 1, dependency installation supplies lint tools; the build can
-   run independently if you only need to use the plugin.
-5. Open **Plugins > Installed Plugins** in WordPress and activate
+4. Open **Plugins > Installed Plugins** in WordPress and activate
    **Are Media Category Articles**.
 
-The repository ZIP is source code, not a ready-to-install WordPress ZIP. Extract
-and build it before activation. For either method, keep the generated `build/`
-directory inside the plugin folder and rebuild after updating the source.
+Keep the included `build/` directory inside the plugin folder. No dependency
+installation or build command is needed for either installation method.
 
 ## Usage
 
@@ -125,14 +106,22 @@ src/render.php          Dynamic frontend template
 src/style.css           Shared editor/frontend styles
 src/assets/             Missing-image placeholder SVG
 src/fonts/              Bundled Jost fonts and license
-build/                  Generated runtime files; ignored by Git
+build/                  Compiled runtime files; included in Git and downloads
 tests/                  Node/PHP tests and preview fixtures
 tools/                  Build/watch and browser checks
-docs/images/            Block screenshots
-reference/              Supplied typography reference
+docs/images/            Desktop and mobile WordPress screenshots
 ```
 
-Run commands from the repository root:
+For source development, run commands from the repository root:
+
+```sh
+npm install
+npm run build
+```
+
+Dependency installation supplies the lint tools. The build uses Node's standard
+library and can run without installing dependencies. Use `npm start` to rebuild
+automatically while editing.
 
 | Command | Purpose |
 | --- | --- |
@@ -145,16 +134,20 @@ Run commands from the repository root:
 | `npm run lint:css` | Run WordPress CSS linting |
 
 For PHP coding standards, run `composer install`, then `composer lint`.
-Edit `src/` and rebuild rather than editing generated files. No dependency
-lockfiles are currently committed. Browser checks write temporary files outside
-the repository and retain their screenshots in `docs/images/`.
+Edit `src/` and rebuild rather than editing generated files. Commit the updated
+`build/` files alongside source changes so downloads remain ready to activate.
+No dependency lockfiles are currently committed. Browser checks write temporary files outside
+the repository; generated comparison screenshots in `docs/images/` are ignored.
+Only the README's desktop and mobile WordPress screenshots are tracked there.
 
-### Implementation decisions
+### Optional technical note
 
 - The block is dynamic: it saves settings, not article snapshots. PHP queries posts on each
-  uncached frontend render; no frontend JavaScript is required.
+  uncached frontend render so new publications appear without resaving the block;
+  no frontend JavaScript is required.
 - The editor uses WordPress core-data and the existing posts REST endpoint, with a
-  scoped `aremedia_category` parameter sharing the PHP query rules.
+  scoped `aremedia_category` parameter sharing the PHP query rules. This keeps
+  preview filtering and ordering consistent without a separate REST endpoint.
 - The frontend uses WordPress's excerpt API. Third-party excerpt filters can
   cause differences from the REST-based editor preview.
 - The selected category supplies every category label. Sponsorship does not
@@ -162,6 +155,16 @@ the repository and retain their screenshots in `docs/images/`.
 - Headlines use Times New Roman; supporting text uses locally bundled Jost.
   These are visual matches to the reference, whose original font names were
   unavailable. Featured subtext uses 15px, normal style and weight 400.
+- Sponsor names use registered post metadata and a native editor sidebar panel,
+  reusing WordPress's save flow, sanitization and post-edit permissions.
+- Compiled assets are committed with the source so installation requires no
+  build tools. Fonts and the placeholder are bundled to avoid external requests.
+
+With more time, the priorities would be completing minimum-version and
+accessibility checks, resolving any official coding-standards findings, and
+locking development dependencies. Feature enhancements could then include
+optional child-category selection and configurable excerpts, while retaining
+the current layout as the default.
 
 ## AI tool usage
 
@@ -204,6 +207,8 @@ sponsor names are edited separately in the post's Sponsorship panel.
 ## Validation status
 
 Build, watch and tests have been exercised through the AI-assisted workflow.
+A fresh repository snapshot contained all 11 runtime files without a build or
+dependency installation; the bundled files matched a clean source rebuild.
 The sponsor panel was verified in WordPress for loading an existing name,
 saving a changed name, clearing it and retaining those changes after reopening.
 Dependency installation and official JS/CSS/PHP standards checks remain blocked.
